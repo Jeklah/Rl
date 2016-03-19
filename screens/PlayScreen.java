@@ -7,10 +7,12 @@ package rltut.screens;
 
 import java.awt.event.KeyEvent;
 import asciiPanel.AsciiPanel;
+import java.awt.Color;
 import rltut.Creature;
 import rltut.CreatureFactory;
 import rltut.World;
 import rltut.WorldBuilder;
+import rltut.FieldOfView;
 import java.util.List;
 import java.util.ArrayList;
 /**
@@ -23,13 +25,14 @@ public class PlayScreen implements Screen{
     private int screenWidth;
     private int screenHeight;
     private List<String> messages;
+    private FieldOfView fov;
 
     public void createWorld(){
         world = new WorldBuilder(90, 32, 5).makeCaves().build();
     }
     
     private void createCreatures(CreatureFactory creatureFactory){
-        player = creatureFactory.newPlayer(messages);
+        player = creatureFactory.newPlayer(messages, fov);
         
         for (int z = 0; z < world.depth(); z++){
             for (int i = 0; i < 8; i++){
@@ -40,9 +43,10 @@ public class PlayScreen implements Screen{
 
     public PlayScreen(){
         screenWidth = 80;
-        screenHeight = 21;
+        screenHeight = 23;
         messages = new ArrayList<String>();
         createWorld();
+        fov = new FieldOfView(world);
         
         CreatureFactory creatureFactory = new CreatureFactory(world);
         createCreatures(creatureFactory);
@@ -56,14 +60,16 @@ public class PlayScreen implements Screen{
         return Math.max(0, Math.min(player.y - screenHeight / 2, world.height() - screenHeight));
     }
     
+    @Override
     public void displayOutput(AsciiPanel terminal){
         int left = getScrollX();
         int top = getScrollY();
-        String stats = String.format(" %3d/ %3d hp", player.hp(), player.maxHp());
+        
         
         displayTiles(terminal, left, top);
         displayMessages(terminal, messages);
-        terminal.writeCenter("-- press [escape] to lose or [enter] to win. --",22);
+        terminal.writeCenter("-- press [escape] to lose or [enter] to win. --",23);
+        String stats = String.format(" %3d/ %3d hp", player.hp(), player.maxHp());
         terminal.write(stats, 1, 23);
     }
     
@@ -94,16 +100,17 @@ public class PlayScreen implements Screen{
     }
     
     private void displayTiles(AsciiPanel terminal, int left, int top){
+        
+        fov.update(player.x, player.y, player.z, player.visionRadius());
         for (int x = 0; x < screenWidth; x++){
             for (int y =0; y < screenHeight; y++){
                 int wx = x + left;
                 int wy = y + top;
                 
-                Creature creature = world.creature(wx,wy,player.z);
-                if (creature != null){
-                    terminal.write(creature.glyph(), creature.x - left, creature.y - top, creature.color());
-                } else {               
+                if (player.canSee(wx, wy, player.z)){
                     terminal.write(world.glyph(wx, wy,player.z), x, y, world.color(wx, wy,player.z));
+                } else {
+                    terminal.write(fov.tile(wx, wy, player.z).glyph(), x, y, Color.darkGray);
                 }
             }
         }

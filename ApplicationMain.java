@@ -33,19 +33,23 @@ public class ApplicationMain extends JFrame implements KeyListener {
             
     }
     
+    @Override
     public void repaint(){
         terminal.clear();
         screen.displayOutput(terminal);
         super.repaint();
     }
     
+    @Override
     public void keyPressed(KeyEvent e){
         screen = screen.respondToUserInput(e);
         repaint();
     }
     
+    @Override
     public void keyReleased(KeyEvent e){}
     
+    @Override
     public void keyTyped(KeyEvent e ){}
     
     public static void main(String[] args) {
