@@ -56,7 +56,7 @@ public class CreatureAi {
         
         Creature other = creature.creature(creature.x + mx, creature.y + my, creature.z);
         
-        if (other != null && other.name() == creature.name()){
+        if (other != null && other.name().equals(creature.name())){
             return;
         } else {
             creature.moveBy(mx, my, 0);

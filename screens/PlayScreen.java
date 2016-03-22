@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 import asciiPanel.AsciiPanel;
 import java.awt.Color;
 import rltut.Creature;
-import rltut.CreatureFactory;
+import rltut.StuffFactory;
 import rltut.World;
 import rltut.WorldBuilder;
 import rltut.FieldOfView;
@@ -26,12 +26,13 @@ public class PlayScreen implements Screen{
     private int screenHeight;
     private List<String> messages;
     private FieldOfView fov;
+    private Screen subscreen;
 
     public void createWorld(){
         world = new WorldBuilder(90, 32, 5).makeCaves().build();
     }
     
-    private void createCreatures(CreatureFactory creatureFactory){
+    private void createCreatures(StuffFactory creatureFactory){
         player = creatureFactory.newPlayer(messages, fov);
         
         for (int z = 0; z < world.depth(); z++){
@@ -44,6 +45,14 @@ public class PlayScreen implements Screen{
             }
         }
     }
+    
+    public void createItems(StuffFactory factory){
+        for (int z = 0; z < world.depth(); z++){
+            for (int i = 0; i < world.width() * world.height() / 20; i++){
+                factory.newRock(z);
+            }
+        }
+    }
 
     public PlayScreen(){
         screenWidth = 80;
@@ -52,8 +61,9 @@ public class PlayScreen implements Screen{
         createWorld();
         fov = new FieldOfView(world);
         
-        CreatureFactory creatureFactory = new CreatureFactory(world);
-        createCreatures(creatureFactory);
+        StuffFactory stuffFactory = new StuffFactory(world);
+        createCreatures(stuffFactory);
+        createItems(stuffFactory);
     }    
     
     public int getScrollX(){
@@ -75,6 +85,10 @@ public class PlayScreen implements Screen{
         terminal.writeCenter("-- press [escape] to lose or [enter] to win. --",23);
         String stats = String.format(" %3d/ %3d hp", player.hp(), player.maxHp());
         terminal.write(stats, 1, 23);
+        
+        if (subscreen != null){
+            subscreen.displayOutput(terminal);
+        }
     }
     
     @Override
@@ -96,10 +110,14 @@ public class PlayScreen implements Screen{
             case KeyEvent.VK_N: player.moveBy( 1, 1, 0); break;
         }
         switch (key.getKeyChar()){ 
+            case 'g':
+            case ',': player.pickupItem(); break;
             case '<': player.moveBy(0,0,-1); break;
             case '>': player.moveBy(0,0,1); break;
         }
-        world.update();
+        if (subscreen == null){
+            world.update();
+        }
         if (player.hp() < 1){
             return new LoseScreen();
         }

@@ -43,6 +43,9 @@ public class Creature {
     private String name;
     public String name(){ return name; }
     
+    private Inventory inventory;
+    public Inventory inventory() { return inventory; }
+    
     public boolean canSee(int wx, int wy, int wz){
         return ai.canSee(wx, wy, wz);
     }
@@ -65,6 +68,7 @@ public class Creature {
         this.defenseValue = defense;
         this.visionRadius = 9;
         this.name = name;
+        this.inventory = new Inventory(20);
     }
     
     private CreatureAi ai;
@@ -169,5 +173,28 @@ public class Creature {
         
         return builder.toString().trim();
     }  
-
+    
+    public void pickupItem(){
+        Item item = world.item(x,y,z);
+        if (item == null){
+            doAction("grab at the ground");
+            return;
+        }
+        if (inventory.isFull()){
+            doAction("can't pick up the %s as your inventory is full", item.name());
+        } else {
+            doAction("pickup a %s", item.name());
+            world.remove(x,y,z);
+            inventory.addItem(item);
+        }
+    }
+    
+    public void drop(Item item){
+        if (world.addAtEmptySpace(item, x, y, z)){
+            doAction("drop a " + item.name());
+            inventory.removeItem(item);
+    } else {
+         notify("There's nowhere to drop the %s.", item.name());
+    }
+}
 }

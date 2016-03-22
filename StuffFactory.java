@@ -7,14 +7,15 @@ package rltut;
 
 import asciiPanel.AsciiPanel;
 import java.util.List;
+import rltut.Item;
 /**
  *
  * @author arthur
  */
-public class CreatureFactory {
+public class StuffFactory {
     private World world;
       
-    public CreatureFactory(World world){
+    public StuffFactory(World world){
         this.world = world;
     }
     
@@ -37,5 +38,11 @@ public class CreatureFactory {
         world.addAtEmptyLocation(bat, depth);
         new BatAi(bat);
         return bat;
+    }
+    
+    public Item newRock(int depth){
+        Item rock = new Item(',', AsciiPanel.yellow, "rock");
+        world.addAtEmptyLocation(rock, depth);
+        return rock;
     }
 }
