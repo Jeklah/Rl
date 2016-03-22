@@ -77,7 +77,7 @@ public class WorldBuilder {
     }
     
     public WorldBuilder makeCaves(){
-        return randomizeTiles().smooth(8).createRegions().connectRegions();
+        return randomizeTiles().smooth(8).createRegions().connectRegions().addExitStairs();
     }
     
     public WorldBuilder createRegions(){
@@ -185,5 +185,18 @@ public class WorldBuilder {
         }
         Collections.shuffle(candidates);
         return candidates;
+    }
+    
+    private WorldBuilder addExitStairs(){
+        int x = -1;
+        int y = -1;
+        
+        do {
+            x = (int)(Math.random() * width);
+            y = (int)(Math.random() * height);
+        } while (tiles[x][y][0] != Tile.FLOOR);
+        
+        tiles[x][y][0] = Tile.STAIRS_UP;
+        return this;
     }
 }
