@@ -46,8 +46,36 @@ public class Creature {
     private Inventory inventory;
     public Inventory inventory() { return inventory; }
     
+    private int maxFood;
+    public int maxFood(){ return maxFood; }
+    
+    private int food;
+    public int food(){ return food; }
+    
+    public void modifyFood(int amount){
+        food += amount;
+        
+        if (food > maxFood){
+            maxFood = maxFood + food / 2;
+            food = maxFood;
+            notify("You can't believe your stomach can hold that much!");
+            modifyHp(-1);
+        } else if (food < 1 && isPlayer()){
+            modifyHp(-1000);
+        }
+    }
+    
     public boolean canSee(int wx, int wy, int wz){
         return ai.canSee(wx, wy, wz);
+    }
+    
+    public boolean isPlayer(){
+        return glyph == '@';
+    }
+    
+    public void eat(Item item){
+        modifyFood(item.foodValue());
+        inventory.removeItem(item);
     }
     
     //see creature
@@ -69,13 +97,17 @@ public class Creature {
         this.visionRadius = 9;
         this.name = name;
         this.inventory = new Inventory(20);
+        this.maxFood = 1000;
+        this.food = maxFood / 3 * 2;
     }
     
     private CreatureAi ai;
     public void setCreatureAi(CreatureAi ai) { this.ai = ai; }
     
     public void dig(int wx, int wy, int wz){
+        modifyFood(-10);
         world.dig(wx, wy, wz);
+        doAction("dig");
     }
     
     public void moveBy(int mx, int my, int mz){
@@ -117,17 +149,21 @@ public class Creature {
         doAction("attack the '%s' for %d damage!", other.name, amount);
         
         other.modifyHp(-amount);
+        modifyFood(-2);
     }
     
     public void modifyHp(int amount){
         hp += amount;
         if (hp < 1){
             doAction("die");
+            leaveCorpse();
             world.remove(this);
+            modifyFood(4);
         }
     }
     
     public void update(){
+        modifyFood(-1);
         ai.onUpdate();
     }
     
@@ -193,8 +229,14 @@ public class Creature {
         if (world.addAtEmptySpace(item, x, y, z)){
             doAction("drop a " + item.name());
             inventory.removeItem(item);
-    } else {
-         notify("There's nowhere to drop the %s.", item.name());
+        } else {
+            notify("There's nowhere to drop the %s.", item.name());
+        }
     }
-}
+    
+    public void leaveCorpse(){
+        Item corpse = new Item('%', color, name + " corpse");
+        corpse.modifyFoodValue(maxHp * 3);
+        world.addAtEmptySpace(corpse, x, y, z);
+    }
 }

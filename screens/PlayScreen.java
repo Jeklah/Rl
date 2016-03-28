@@ -53,6 +53,12 @@ public class PlayScreen implements Screen{
             for (int i = 0; i < world.width() * world.height() / 20; i++){
                 factory.newRock(z);
             }
+            for (int i = 0; i < 2; i++){
+                factory.newFruit(z);
+            }
+            for (int i = 0; i < 1; i++){
+                factory.newBread(z);
+            }
         }
         factory.newVictoryItem(world.depth() - 1);
     }
@@ -77,6 +83,20 @@ public class PlayScreen implements Screen{
         return Math.max(0, Math.min(player.y - screenHeight / 2, world.height() - screenHeight));
     }
     
+    private String hunger(){
+        if (player.food() < player.maxFood() * 0.1){
+            return "Starving";
+        } else if (player.food() < player.maxFood() * 0.2){
+            return "Hungry";
+        } else if (player.food() > player.maxFood() * 0.9){
+            return "Stuffed";
+        } else if (player.food() > player.maxFood() * 0.8){
+            return "Full";
+        } else {
+            return "";
+        }
+    }
+    
     @Override
     public void displayOutput(AsciiPanel terminal){
         int left = getScrollX();
@@ -85,7 +105,7 @@ public class PlayScreen implements Screen{
         
         displayTiles(terminal, left, top);
         displayMessages(terminal, messages);
-        String stats = String.format(" %3d/ %3d hp", player.hp(), player.maxHp());
+        String stats = String.format(" %3d/ %3d hp", player.hp(), player.maxHp(), hunger());
         terminal.write(stats, 1, 23);
         
         if (subscreen != null){
@@ -108,6 +128,7 @@ public class PlayScreen implements Screen{
             case KeyEvent.VK_U: player.moveBy( 1,-1, 0); break;
             case KeyEvent.VK_B: player.moveBy(-1, 1, 0); break;
             case KeyEvent.VK_N: player.moveBy( 1, 1, 0); break;
+            case KeyEvent.VK_E: subscreen = new EatScreen(player); break;
         }
         switch (key.getKeyChar()){ 
             case 'g':

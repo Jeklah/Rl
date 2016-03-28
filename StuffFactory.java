@@ -52,5 +52,19 @@ public class StuffFactory {
         return item;
     }
     
+    public Item newBread(int depth){
+        Item item = new Item('|', AsciiPanel.yellow, "bread");
+        item.modifyFoodValue(200);
+        world.addAtEmptyLocation(item, depth);
+        return item;
+    }
+    
+    public Item newFruit(int depth){
+        Item item = new  Item('&', AsciiPanel.brightRed, "apple");
+        item.modifyFoodValue(100);
+        world.addAtEmptyLocation(item, depth);
+        return item;
+    }
+    
     
 }
