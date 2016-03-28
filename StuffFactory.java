@@ -66,5 +66,27 @@ public class StuffFactory {
         return item;
     }
     
+    public Item newDagger(int depth){
+        Item item = new Item(')', AsciiPanel.white, "dagger");
+        item.modifyAttackValue(5);
+        world.addAtEmptyLocation(item, depth);
+        return item;
+    }
     
+    public Item newSword(int depth){
+        Item item = new Item(')', AsciiPanel.brightWhite, "sword");
+        item.modifyAttackValue(10);
+        world.addAtEmptyLocation(item, depth);
+        return item;
+    }
+    
+    public Item newStaff(int depth){
+        Item item = new Item(')', AsciiPanel.yellow, "staff");
+        item.modifyAttackValue(5);
+        item.modifyDefenseValue(3);
+        world.addAtEmptyLocation(item, depth);
+        return item;
+        
+        
+    }
 }
