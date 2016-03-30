@@ -53,7 +53,7 @@ public class StuffFactory {
     }
     
     public Item newBread(int depth){
-        Item item = new Item('|', AsciiPanel.yellow, "bread");
+        Item item = new Item('e', AsciiPanel.yellow, "bread");
         item.modifyFoodValue(200);
         world.addAtEmptyLocation(item, depth);
         return item;
@@ -67,26 +67,69 @@ public class StuffFactory {
     }
     
     public Item newDagger(int depth){
-        Item item = new Item(')', AsciiPanel.white, "dagger");
+        Item item = new Item('!', AsciiPanel.white, "dagger");
         item.modifyAttackValue(5);
         world.addAtEmptyLocation(item, depth);
         return item;
     }
     
     public Item newSword(int depth){
-        Item item = new Item(')', AsciiPanel.brightWhite, "sword");
+        Item item = new Item('|', AsciiPanel.brightWhite, "sword");
         item.modifyAttackValue(10);
         world.addAtEmptyLocation(item, depth);
         return item;
     }
     
     public Item newStaff(int depth){
-        Item item = new Item(')', AsciiPanel.yellow, "staff");
+        Item item = new Item('ƪ', AsciiPanel.yellow, "staff");
         item.modifyAttackValue(5);
         item.modifyDefenseValue(3);
         world.addAtEmptyLocation(item, depth);
+        return item;        
+    }
+    
+    public Item newLightArmour(int depth){
+        Item item = new Item('[', AsciiPanel.green, "tunic");
+        item.modifyDefenseValue(2);
+        world.addAtEmptyLocation(item, depth);
         return item;
-        
-        
+    }
+    
+    public Item newMediumArmour(int depth){
+        Item item = new Item('[', AsciiPanel.white, "chainmail");
+        item.modifyDefenseValue(4);
+        world.addAtEmptyLocation(item, depth);
+        return item;        
+    }
+    
+    public Item newHeavyArmour(int depth){
+        Item item = new Item('[', AsciiPanel.brightWhite, "platemail");
+        item.modifyDefenseValue(6);
+        world.addAtEmptyLocation(item, depth);
+        return item;
+    }
+    
+    public Item randomWeapon(int depth){
+        switch ((int)(Math.random() * 3)) {
+            case 0: return newDagger(depth);
+            case 1: return newSword(depth);
+            default: return newStaff(depth);
+        }
+    }
+    
+    public Item randomArmour(int depth){
+        switch ((int)(Math.random() * 3)){
+            case 0: return newLightArmour(depth);
+            case 1: return newMediumArmour(depth);
+            default: return newHeavyArmour(depth);
+        }
+    }
+    
+    public Item newEdibleWeapon(int depth){
+        Item item = new Item(')', AsciiPanel.yellow, "baguette");
+        item.modifyAttackValue(3);
+        item.modifyFoodValue(50);
+        world.addAtEmptyLocation(item, depth);
+        return item;
     }
 }

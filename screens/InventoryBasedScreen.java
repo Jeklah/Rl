@@ -25,11 +25,12 @@ public abstract class InventoryBasedScreen implements Screen {
     public InventoryBasedScreen(Creature player){
         this.player = player;
         this.letters = "abcdefghijklmnopqrstuvwxyz";
+        
     }
     
     public void displayOutput(AsciiPanel terminal) {
         ArrayList<String> lines = getList();
-        
+                
         int y = 23 - lines.size();
         int x = 4;
         
@@ -58,6 +59,11 @@ public abstract class InventoryBasedScreen implements Screen {
             }
             
             String line = letters.charAt(i) + " - " + item.glyph() + " " + item.name();
+            
+            if(item == player.weapon() || item == player.armour()){
+                line += " (equipped)";
+            }
+            
             lines.add(line);
         }
         return lines;

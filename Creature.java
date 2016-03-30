@@ -31,11 +31,25 @@ public class Creature {
     private int hp;
     public int hp() { return hp; }
     
+    private Item weapon;
+    public Item weapon() { return weapon; }
+    
+    private Item armour;
+    public Item armour() { return armour; }
+    
     private int attackValue;
-    public int attackValue() { return attackValue; }
+    public int attackValue(){ 
+        return attackValue 
+                + (weapon == null ? 0 : weapon.attackValue())
+                + (armour == null ? 0 : armour.attackValue());
+    }
     
     private int defenseValue;
-    public int defenseValue() { return defenseValue; }
+    public int defenseValue() {
+        return defenseValue
+                + (weapon == null ? 0 : weapon.defenseValue())
+                + (armour == null ? 0 : armour.defenseValue());
+    }
     
     private int visionRadius;
     public int visionRadius() { return visionRadius; }
@@ -74,11 +88,15 @@ public class Creature {
     }
     
     public void eat(Item item){
+        if (item.foodValue() < 0){
+            notify("Sick!");
+        }
         modifyFood(item.foodValue());
         inventory.removeItem(item);
+        unequip(item);
     }
     
-    //see creature
+    //set creature at location
     public Creature creature(int wx, int wy, int wz){
         return world.creature(wx, wy, wz);
     }
@@ -229,6 +247,7 @@ public class Creature {
         if (world.addAtEmptySpace(item, x, y, z)){
             doAction("drop a " + item.name());
             inventory.removeItem(item);
+            unequip(item);
         } else {
             notify("There's nowhere to drop the %s.", item.name());
         }
@@ -238,5 +257,35 @@ public class Creature {
         Item corpse = new Item('%', color, name + " corpse");
         corpse.modifyFoodValue(maxHp * 3);
         world.addAtEmptySpace(corpse, x, y, z);
+    }
+    
+    public void unequip(Item item){
+        if (item == null){
+            return;
+        }
+        
+        if (item == armour){
+            doAction("remove a " + item.name());
+            armour = null;
+        } else if (item == weapon){
+            doAction("put away a " + item.name());
+            weapon = null;
+        }
+    }
+    
+    public void equip(Item item){
+        if (item.attackValue() == 0 && item.defenseValue() == 0){
+            return;
+        }
+        
+        if (item.attackValue() >= item.defenseValue()){
+            unequip(weapon);
+            doAction("wield a " + item.name());
+            weapon = item;
+        } else {
+            unequip(armour);
+            doAction("put on a " + item.name());
+            armour = item;
+        }
     }
 }
