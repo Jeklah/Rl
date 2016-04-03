@@ -132,4 +132,11 @@ public class StuffFactory {
         world.addAtEmptyLocation(item, depth);
         return item;
     }
+    
+    public Creature newZombie(int depth, Creature player){
+        Creature zombie = new Creature(world, 'z', AsciiPanel.white, 50, 10, 10, "zombie");
+        world.addAtEmptyLocation(zombie, depth);
+        new ZombieAi(zombie, player);
+        return zombie;
+    }
 }
