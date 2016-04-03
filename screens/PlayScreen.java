@@ -53,16 +53,12 @@ public class PlayScreen implements Screen{
             for (int i = 0; i < world.width() * world.height() / 20; i++){
                 factory.newRock(z);
             }
-            for (int i = 0; i < 2; i++){
-                factory.newFruit(z);
-            }
-            for (int i = 0; i < 1; i++){
-                factory.newBread(z);
-            }
-            /*for (int i = 0; i < 3; i++){
-                factory.randomArmour(z);
-                factory.randomWeapon(z);
-            }*/ 
+            factory.newFruit(z);
+            factory.newEdibleWeapon(z);
+            factory.newBread(z);
+            factory.randomArmour(z);
+            factory.randomWeapon(z);
+            factory.randomWeapon(z);
         }
         factory.newVictoryItem(world.depth() - 1);
     }
@@ -88,13 +84,13 @@ public class PlayScreen implements Screen{
     }
     
     private String hunger(){
-        if (player.food() < player.maxFood() * 0.1){
+        if (player.food() < 100){
             return "Starving";
-        } else if (player.food() < player.maxFood() * 0.2){
+        } else if (player.food() < 300){
             return "Hungry";
-        } else if (player.food() > player.maxFood() * 0.9){
+        } else if (player.food() > player.maxFood() * 0.95){
             return "Stuffed";
-        } else if (player.food() > player.maxFood() * 0.8){
+        } else if (player.food() > player.maxFood() * 0.85){
             return "Full";
         } else {
             return "";

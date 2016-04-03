@@ -25,7 +25,6 @@ public abstract class InventoryBasedScreen implements Screen {
     public InventoryBasedScreen(Creature player){
         this.player = player;
         this.letters = "abcdefghijklmnopqrstuvwxyz";
-        
     }
     
     public void displayOutput(AsciiPanel terminal) {
