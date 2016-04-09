@@ -40,7 +40,8 @@ public class PlayerAi extends CreatureAi {
         return fov.isVisible(wx, wy, wz);
     }
     
-
+    public void onGainLevel(){
+    }
 }
    
 

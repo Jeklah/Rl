@@ -120,11 +120,13 @@ public class PlayScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyEvent key) {
+        int level = player.level();
+        if (player.level() > level){
+            subscreen = new LevelUpScreen(player, player.level() - level);
+        }
         switch (key.getKeyCode()) {
             case KeyEvent.VK_LEFT:
-            case KeyEvent.VK_H:
-                player.moveBy(-1, 0, 0);
-                break;
+            case KeyEvent.VK_H: player.moveBy(-1, 0, 0); break;
             case KeyEvent.VK_RIGHT:
             case KeyEvent.VK_L:
                 player.moveBy(1, 0, 0);
