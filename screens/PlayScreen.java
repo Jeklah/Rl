@@ -128,41 +128,36 @@ public class PlayScreen implements Screen {
             case KeyEvent.VK_LEFT:
             case KeyEvent.VK_H: player.moveBy(-1, 0, 0); break;
             case KeyEvent.VK_RIGHT:
-            case KeyEvent.VK_L:
-                player.moveBy(1, 0, 0);
-                break;
+            case KeyEvent.VK_L: player.moveBy(1, 0, 0); break;
             case KeyEvent.VK_UP:
-            case KeyEvent.VK_K:
-                player.moveBy(0, -1, 0);
-                break;
+            case KeyEvent.VK_K: player.moveBy(0, -1, 0); break;
             case KeyEvent.VK_DOWN:
-            case KeyEvent.VK_J:
-                player.moveBy(0, 1, 0);
-                break;
-            case KeyEvent.VK_Y:
-                player.moveBy(-1, -1, 0);
-                break;
-            case KeyEvent.VK_U:
-                player.moveBy(1, -1, 0);
-                break;
-            case KeyEvent.VK_B:
-                player.moveBy(-1, 1, 0);
-                break;
-            case KeyEvent.VK_N:
-                player.moveBy(1, 1, 0);
-                break;
-            case KeyEvent.VK_E:
-                subscreen = new EatScreen(player);
-                break;
-            case KeyEvent.VK_W:
-                subscreen = new EquipScreen(player);
-                break;
+            case KeyEvent.VK_J: player.moveBy(0, 1, 0); break;
+            case KeyEvent.VK_Y: player.moveBy(-1, -1, 0); break;
+            case KeyEvent.VK_U: player.moveBy(1, -1, 0); break;
+            case KeyEvent.VK_B: player.moveBy(-1, 1, 0); break;
+            case KeyEvent.VK_N: player.moveBy(1, 1, 0); break;
+            case KeyEvent.VK_D: subscreen = new DropScreen(player); break;
+            case KeyEvent.VK_E: subscreen = new EatScreen(player); break;
+            case KeyEvent.VK_W: subscreen = new EquipScreen(player); break;
+            case KeyEvent.VK_SEMICOLON: subscreen = new LookScreen(player, "Looking",
+                    player.x - getScrollX(),
+                    player.y - getScrollY()); break;
+            case KeyEvent.VK_T: subscreen = new ThrowScreen(player,
+                    player.x - getScrollX(),
+                    player.y - getScrollY()); break;
+            case KeyEvent.VK_F:
+                if (player.weapon() == null || player.weapon().rangedAttackValue() == 0){
+                    player.notify("You don't have a ranged weapon equipped.");
+                } else {
+                    subscreen = new FireWeaponScreen(player,
+                            player.x - getScrollX(),
+                            player.y - getScrollY()); break;
+                }
         }
         switch (key.getKeyChar()) {
             case 'g':
-            case ',':
-                player.pickupItem();
-                break;
+            case ',': player.pickupItem(); break;
             case '<':
                 if (userIsTryingToExit()) {
                     return userExits();
@@ -170,10 +165,14 @@ public class PlayScreen implements Screen {
                     player.moveBy(0, 0, -1);
                     break;
                 }
-            case '>':
-                player.moveBy(0, 0, 1);
-                break;
+            case '>': player.moveBy(0, 0, 1); break;
+            case '?': subscreen = new HelpScreen(); break;
         }
+        
+        if (player.level() > level){
+            subscreen = new LevelUpScreen(player, player.level() - level);
+        }
+        
         if (subscreen == null) {
             world.update();
         }

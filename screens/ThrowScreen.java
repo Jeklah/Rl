@@ -1,0 +1,36 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package rltut.screens;
+
+import rltut.Creature;
+import rltut.Item;
+
+/**
+ *
+ * @author arthur
+ */
+public class ThrowScreen extends InventoryBasedScreen {
+    private int sx;
+    private int sy;
+    
+    public ThrowScreen(Creature player, int sx, int sy){
+        super(player);
+        this.sx = sx;
+        this.sy = sy;
+    }
+    
+    protected String getVerb(){
+        return "throw";
+    }
+    
+    protected boolean isAcceptable(Item item){
+        return true;
+    }
+    
+    protected Screen use(Item item){
+        return new ThrowAtScreen(player, sx, sy, item);
+    }
+}

@@ -40,7 +40,7 @@ public class CreatureAi {
         }
         
         for (Point p : new Line(creature.x, creature.y, wx, wy)){
-            if (creature.tile(p.x, p.y, wz).isGround() || p.x == wx && p.y == wy){
+            if (creature.realTile(p.x, p.y, wz).isGround() || p.x == wx && p.y == wy){
                 continue;
             } else {
                 return false;
@@ -56,7 +56,8 @@ public class CreatureAi {
         
         Creature other = creature.creature(creature.x + mx, creature.y + my, creature.z);
         
-        if (other != null && other.name().equals(creature.name())){
+        if (other != null && other.name().equals(creature.name()) 
+                || !creature.tile(creature.x+mx, creature.y+my, creature.z).isGround()){
             return;
         } else {
             creature.moveBy(mx, my, 0);
@@ -65,5 +66,9 @@ public class CreatureAi {
     
     public void onGainLevel(){
         new LevelUpController().autoLevelUp(creature);
+    }
+    
+    public Tile rememberedTile(int wx, int wy, int wz){
+        return Tile.UNKNOWN;
     }
 }
