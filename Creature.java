@@ -9,8 +9,7 @@ import java.awt.Color;
 
 /**
  *
- * @author arthur
- */
+ * @author arthur*/
 public class Creature {
 
     private World world;
@@ -364,11 +363,21 @@ public class Creature {
     }
 
     public void equip(Item item) {
-        if (item.attackValue() == 0 && item.defenseValue() == 0) {
+        if (!inventory.contains(item)){
+            if (inventory.isFull()){
+                notify("Can't equip %s since you're holding too much stuff.", item.name());
+                return;
+            } else {
+                world.remove(item);
+                inventory.addItem(item);
+            }
+        }
+        
+        if (item.attackValue() == 0 && item.rangedAttackValue() == 0 && item.defenseValue() == 0){
             return;
         }
-
-        if (item.attackValue() >= item.defenseValue()) {
+        
+        if (item.attackValue() + item.rangedAttackValue() >= item.defenseValue()){
             unequip(weapon);
             doAction("wield a " + item.name());
             weapon = item;
@@ -487,5 +496,16 @@ public class Creature {
         inventory.removeItem(item);
         unequip(item);
         world.addAtEmptySpace(item, wx, wy, wz);
+    }
+    
+    private void leaveCorpse(){
+        Item corpse = new Item('%', color, name + " corpse");
+        corpse.modifyFoodValue(maxHp);
+        world.addAtEmptySpace(corpse, x, y, z);
+        for (Item item : inventory.getItems()){
+            if (item != null){
+                drop(item);
+            }
+        }
     }
 }

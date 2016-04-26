@@ -149,4 +149,13 @@ public class StuffFactory {
         return item;
     }
     
+    
+    public Creature newGobline(int depth, Creature player){
+        Creature goblin = new Creature(world, 'g', AsciiPanel.brightGreen, 66, 15, 5, "goblin");
+        goblin.equip(randomWeapon(depth));
+        goblin.equip(randomArmour(depth));
+        world.addAtEmptyLocation(goblin, depth);
+        new GoblinAi(goblin, player);
+        return goblin;
+    }
 }
