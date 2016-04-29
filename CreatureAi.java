@@ -71,4 +71,6 @@ public class CreatureAi {
     public Tile rememberedTile(int wx, int wy, int wz){
         return Tile.UNKNOWN;
     }
+    
+    
 }

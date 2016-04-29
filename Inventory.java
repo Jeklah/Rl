@@ -45,4 +45,13 @@ public class Inventory {
         }
         return size == items.length;
     }
+    
+    public boolean contains(Item item){
+        for (Item i : items){
+            if (i == item){
+                return true;
+            }
+        }
+        return false;
+    }
 }

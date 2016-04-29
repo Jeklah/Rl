@@ -99,6 +99,12 @@ public class Creature {
     public int food() {
         return food;
     }
+    
+    private int regenHpCooldown;
+    private int regenHpPer1000;
+    public void modifyRegenHpPer1000(int amount){
+        regenHpPer1000 += amount;
+    }
 
     public void modifyFood(int amount) {
         food += amount;
@@ -188,6 +194,7 @@ public class Creature {
         this.maxFood = 1000;
         this.food = maxFood / 3 * 2;
         this.level = 1;
+        this.regenHpPer1000 = 10;
     }
 
     private CreatureAi ai;
@@ -342,10 +349,15 @@ public class Creature {
         }
     }
 
-    public void leaveCorpse() {
+    private void leaveCorpse(){
         Item corpse = new Item('%', color, name + " corpse");
-        corpse.modifyFoodValue(maxHp * 3);
+        corpse.modifyFoodValue(maxHp);
         world.addAtEmptySpace(corpse, x, y, z);
+        for (Item item : inventory.getItems()){
+            if (item != null){
+                drop(item);
+            }
+        }
     }
 
     public void unequip(Item item) {
@@ -498,14 +510,14 @@ public class Creature {
         world.addAtEmptySpace(item, wx, wy, wz);
     }
     
-    private void leaveCorpse(){
-        Item corpse = new Item('%', color, name + " corpse");
-        corpse.modifyFoodValue(maxHp);
-        world.addAtEmptySpace(corpse, x, y, z);
-        for (Item item : inventory.getItems()){
-            if (item != null){
-                drop(item);
-            }
+    
+    private void regenerateHealth(){
+        regenHpCooldown -= regenHpPer1000;
+        if (regenHpCooldown < 0){
+            modifyHp(1);
+            modifyFood(-1);
+            regenHpCooldown += 1000;
         }
     }
+
 }
