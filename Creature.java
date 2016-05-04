@@ -6,6 +6,8 @@
 package rltut;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -53,9 +55,12 @@ public class Creature {
     public Item armour() {
         return armour;
     }
+    
+    private List<Effect> effects;
+    public List<Effect> effects() { return effects; }
 
     private int attackValue;
-
+    public void modifyAttackValue(int value) { attackValue += value; }
     public int attackValue() {
         return attackValue
                 + (weapon == null ? 0 : weapon.attackValue())
@@ -63,7 +68,7 @@ public class Creature {
     }
 
     private int defenseValue;
-
+    public void modifyDefenseValue(int value) { defenseValue += value; }
     public int defenseValue() {
         return defenseValue
                 + (weapon == null ? 0 : weapon.defenseValue())
@@ -195,6 +200,7 @@ public class Creature {
         this.food = maxFood / 3 * 2;
         this.level = 1;
         this.regenHpPer1000 = 10;
+        this.effects = new ArrayList<Effect>();
     }
 
     private CreatureAi ai;
@@ -278,7 +284,10 @@ public class Creature {
 
     public void update() {
         modifyFood(-1);
+        regenerateHealth();
+        updateEffects();
         ai.onUpdate();
+     
     }
 
     public boolean canEnter(int wx, int wy, int wz) {
@@ -519,5 +528,43 @@ public class Creature {
             regenHpCooldown += 1000;
         }
     }
-
+    
+    public void quaff(Item item){
+        doAction("quaff a " + item.name());
+        consume(item);
+    }
+    
+    
+    private void consume(Item item){
+        if (item.foodValue() < 0){
+            notify("Gross!");
+            
+            addEffect(item.quaffEffect());
+            
+            modifyFood(item.foodValue());
+            getRidOf(item);
+        }
+    }
+    
+    private void addEffect(Effect effect){
+        if(effect == null){
+            return;
+        }
+        effect.start(this);
+        effects.add(effect);
+    }
+    
+    private void updateEffects(){
+        List<Effect> done = new ArrayList<Effect>();
+        
+        for (Effect effect : effects){
+            effect.update(this);
+            if(effect.isDone()){
+                effect.end(this);
+                done.add(effect);
+            }
+        }
+        effects.removeAll(done);
+    }
+    
 }
