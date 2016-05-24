@@ -500,6 +500,7 @@ public class Creature {
     
     private void throwAttack(Item item, Creature other) {
 	commonAttack(other, attackValue / 2 + item.thrownAttackValue(), "throw a %s at the %s for %d damage", item.name(), other.name);
+        other.addEffect(item.quaffEffect());
     }
 	
     public void rangedWeaponAttack(Creature other){
