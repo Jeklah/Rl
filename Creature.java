@@ -201,6 +201,7 @@ public class Creature {
         this.level = 1;
         this.regenHpPer1000 = 10;
         this.effects = new ArrayList<Effect>();
+        this.regenManaPer1000 = 20;
     }
 
     private CreatureAi ai;
@@ -285,8 +286,10 @@ public class Creature {
     public void update() {
         modifyFood(-1);
         regenerateHealth();
+        regenerateMana();
         updateEffects();
         ai.onUpdate();
+        
      
     }
 
@@ -568,4 +571,27 @@ public class Creature {
         effects.removeAll(done);
     }
     
+    private int maxMana;
+    public int maxMana() { return maxMana; }
+    public void modifyMaxMana(int amount) { maxMana += amount; }
+    
+    private int mana;
+    public int mana() { return mana; }
+    public void modifyMana(int amount) { mana = Math.max(0, Math.min(mana+amount, maxMana)); }
+    
+    private int regenManaCooldown;
+    private int regenManaPer1000;
+    public void modifyRegenManaPer1000(int amount) { regenManaPer1000 += amount; }
+    
+    private void regenerateMana(){
+        regenManaCooldown -= regenManaPer1000;
+        if (regenManaCooldown < 0){
+            if (mana < maxMana){
+                modifyMana(1);
+                modifyFood(-1);
+            }
+            
+            regenManaCooldown += 1000;
+        }
+    }    
 }

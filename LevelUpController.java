@@ -25,6 +25,19 @@ public class LevelUpController {
         },
         new LevelUpOption("Increased vision"){
             public void invoke(Creature creature) { creature.gainVision(); }
+        },
+        new LevelUpOption("Increased mana"){
+            public void invoke(Creature creature){
+                creature.modifyMaxMana(5);
+                creature.modifyMana(5);
+                creature.doAction("look more magical");
+            }
+        },
+        new LevelUpOption("Increased mana regeneration"){
+            public void invoke(Creature creature){
+                creature.modifyRegenManaPer1000(10);
+                creature.doAction("look a little less tired");
+            }
         }
     };
     
