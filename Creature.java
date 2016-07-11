@@ -433,6 +433,17 @@ public class Creature {
         doAction("look more aware");
     }
     
+    public void gainMaxMana(){
+        maxMana += 5;
+        mana += 5;
+        doAction("look more magical");
+    }
+    
+    public void gainRegenMana(){
+        regenManaPer1000 += 5;
+        doAction("look a little less tired");
+    }
+    
     public String details(){
         return String.format("    level:%d     attack:%d     defense:%d     hp:%d", level, attackValue(), defenseValue(), hp);
     }

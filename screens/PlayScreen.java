@@ -107,10 +107,10 @@ public class PlayScreen implements Screen {
     public void displayOutput(AsciiPanel terminal) {
         int left = getScrollX();
         int top = getScrollY();
+        String stats = String.format(" %3d/%3d hp  %d/%d mana  %8s", player.hp(), player.maxHp(), hunger());
 
         displayTiles(terminal, left, top);
         displayMessages(terminal, messages);
-        String stats = String.format(" %3d/ %3d hp", player.hp(), player.maxHp(), hunger());
         terminal.write(stats, 1, 23);
 
         if (subscreen != null) {

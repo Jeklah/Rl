@@ -46,7 +46,14 @@ public class LevelUpController {
                 creature.modifyRegenManaPer1000(10);
                 creature.doAction("look a little less tired");
             }
-        }
+        },
+        new LevelUpOption("Increased mana"){
+            public void invoke(Creature creature) { creature.gainMaxMana(); }
+        },
+        new LevelUpOption("Increased mana regeneration") {
+            public void invoke(Creature creature) { creature.gainRegenMana(); }
+        }  
+         
     };
     
     public void autoLevelUp(Creature creature){
