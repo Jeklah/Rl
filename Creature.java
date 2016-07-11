@@ -571,6 +571,11 @@ public class Creature {
         effects.removeAll(done);
     }
     
+    private int maxHP;
+    public int maxHP() { return maxHP; }
+    public void modifyMaxHp(int amount) { maxHP += amount; }
+            
+    
     private int maxMana;
     public int maxMana() { return maxMana; }
     public void modifyMaxMana(int amount) { maxMana += amount; }
