@@ -10,7 +10,7 @@ import rltut.Spell;
 
 /**
  *
- * @author arthu
+ * @author arthur
  */
 public class CastSpellScreen extends TargetBasedScreen{
     private Spell spell;
