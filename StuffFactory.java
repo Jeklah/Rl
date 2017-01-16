@@ -328,7 +328,7 @@ public class StuffFactory {
             public void end(Creature creature){
                 creature.modifyAttackValue(-2);
                 creature.modifyDefenseValue(-2);
-                creature.modifyVisionRaidus(-1);
+                creature.modifyVisionRadius(-1);
                 creature.modifyRegenHpPer1000(-10);
                 creature.modifyRegenManaPer1000(10);
             }

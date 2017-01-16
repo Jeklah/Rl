@@ -145,33 +145,38 @@ public class World {
     }
     
 public boolean addAtEmptySpace(Item item, int x, int y, int z){
-		if (item == null)
-			return true;
+	if (item == null){
+		return true;
+        }
 		
-		List<Point> points = new ArrayList<Point>();
-		List<Point> checked = new ArrayList<Point>();
+        List<Point> points = new ArrayList<Point>();
+        List<Point> checked = new ArrayList<Point>();
 		
-		points.add(new Point(x, y, z));
+        points.add(new Point(x, y, z));
 		
-		while (!points.isEmpty()){
-			Point p = points.remove(0);
-			checked.add(p);
+	while (!points.isEmpty()){
+            Point p = points.remove(0);
+            checked.add(p);
 			
-			if (!tiles[p.x][p.y][p.z].isGround())
-				continue;
+            if (!tiles[p.x][p.y][p.z].isGround())
+		continue;
 				
-			if (items[p.x][p.y][p.z] == null){
-				items[p.x][p.y][p.z] = item;
-				Creature c = this.creature(p.x, p.y, p.z);
-				if (c != null)
-					c.notify("A %s lands between your feet.", item.name());
-				return true;
-			} else {
-				List<Point> neighbors = p.neighbours8();
-				neighbors.removeAll(checked);
-				points.addAll(neighbors);
-			}
-		}
-		return false;
+            if (items[p.x][p.y][p.z] == null){
+		items[p.x][p.y][p.z] = item;
+		Creature c = this.creature(p.x, p.y, p.z);
+            	if (c != null)
+                	c.notify("A %s lands between your feet.", item.name());
+                return true;
+            } else {
+		List<Point> neighbors = p.neighbours8();
+		neighbors.removeAll(checked);
+		points.addAll(neighbors);
+            }
 	}
+	return false;
+    }
+
+    public void add(Creature pet){
+        creatures.add(pet);
+    }
 }
