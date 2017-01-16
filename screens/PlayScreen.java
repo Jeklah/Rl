@@ -154,6 +154,8 @@ public class PlayScreen implements Screen {
                             player.x - getScrollX(),
                             player.y - getScrollY()); break;
                 }
+            case KeyEvent.VK_Q: subscreen = new QuaffScreen(player); break;
+            case KeyEvent.VK_R: subscreen = new ReadScreen(player, player.x - getScrollX(), player.y - getScrollY()); break;
         }
         switch (key.getKeyChar()) {
             case 'g':
