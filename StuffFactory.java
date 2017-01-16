@@ -176,7 +176,34 @@ public class StuffFactory {
         return item;
     }
     
-    public Item newPotionofPoison(int depth){
+    public Item newPotionOfMana(int depth){
+        Item item = new Item('!', AsciiPanel.white, "mana potion");
+        item.setQuaffEffect(new Effect(1){
+            public void start(Creature creature){
+                if (creature.mana() == creature.maxMana()){
+                    return;
+                }
+                creature.modifyMana(10);
+                creature.doAction("look restored");
+            }
+        });
+        world.addAtEmptyLocation(item, depth);
+        return item;
+    }
+    
+    public Item newPotionOfSlowHealth(int depth){
+        Item item = new Item('!', AsciiPanel.white, "slow health potion");
+        item.setQuaffEffect(new Effect(100){
+            public void update(Creature creature){
+                super.update(creature);
+                creature.modifyHp(1);
+            }
+        });
+        world.addAtEmptyLocation(item, depth);
+        return item;        
+    }
+    
+    public Item newPotionOfPoison(int depth){
         Item item = new Item('!', AsciiPanel.white, "poison potion");
         item.setQuaffEffect(new Effect(20){
             public void start(Creature creature){
@@ -212,11 +239,43 @@ public class StuffFactory {
         return item;
     }
     
+    public Item newPotionOfArcher(int depth){
+        Item item = new Item('!', AsciiPanel.white, "archer's potion");
+        item.setQuaffEffect(new Effect(20){
+            public void start(Creature creature){
+                creature.modifyVisionRadius(3);
+                creature.doAction("look more alert");
+            }
+            public void end(Creature creature){
+                creature.modifyVisionRadius(-3);
+                creature.doAction("look less alert");
+            }
+        });
+        world.addAtEmptyLocation(item, depth);
+        return item;
+    }
+    
+    public Item newPotionOfExperience(int depth){
+        Item item = new Item('!', AsciiPanel.white, "experience potion");
+        item.setQuaffEffect(new Effect(20){
+            public void start(Creature creature){
+                creature.doAction("look more experienced");
+                creature.modifyXP(creature.level() * 5);
+            }
+        });
+        world.addAtEmptyLocation(item, depth);
+        return item;   
+    }
+    
     public Item randomPotion(int depth){
         switch((int)(Math.random() * 3)){
             case 0: return newPotionOfHealth(depth);
-            case 1: return newPotionofPoison(depth);
-            default: return newPotionOfWarrior(depth);
+            case 1: return newPotionOfPoison(depth);
+            case 2: return newPotionOfMana(depth);
+            case 3: return newPotionOfSlowHealth(depth);
+            case 4: return newPotionOfArcher(depth);
+            case 5: return newPotionOfWarrior(depth);
+            default: return newPotionOfExperience(depth);
         }
     }
     

@@ -76,7 +76,9 @@ public class Creature {
     }
 
     private int visionRadius;
-
+    public void modifyVisionRadius(int value) {
+        visionRadius += value; 
+    }
     public int visionRadius() {
         return visionRadius;
     }
