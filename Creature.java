@@ -125,7 +125,8 @@ public class Creature {
     }
 
     public boolean canSee(int wx, int wy, int wz) {
-        return ai.canSee(wx, wy, wz);
+        return (detectCreatures > 0 && world.creature(wx, wy, wz) != null ||
+                ai.canSee(wx, wy, wz));
     }
 
     public boolean isPlayer() {
@@ -610,4 +611,33 @@ public class Creature {
             regenManaCooldown += 1000;
         }
     }    
+    
+    public void summon(Creature other){
+        world.add(other);
+    }
+        
+    private int detectCreatures;
+    public void modifyDetectCreatures(int amount) { detectCreatures += amount; }
+    
+    public void castSpell(Spell spell, int x2, int y2){
+        Creature other = creature(x2, y2, z);
+        
+        if (spell.manaCost() > mana){
+            doAction("point and mumble but nothing happens");
+            return;
+        } else if (other == null){
+                    doAction("point and mumble at nothing");
+                    return;
+        }
+        
+        other.addEffect(spell.effect());
+        modifyMana(-spell.manaCost());
+    }            
+
+
+
+
 }
+    
+       
+
